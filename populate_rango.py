@@ -9,26 +9,26 @@ from rango.models import Category,Page
 def populate():
     python_pages = [
         {'title': 'Official Python Tutorial',
-         'url':'http://docs.python.org/3/tutorial/'},
+         'url':'http://docs.python.org/3/tutorial/', 'views': 666},
         {'title':'How to Think like a Computer Scientist',
-         'url':'http://www.greenteapress.com/thinkpython/'},
+         'url':'http://www.greenteapress.com/thinkpython/', 'views': 310},
         {'title':'Learn Python in 10 Minutes',
-         'url':'http://www.tangowithdjango.com/'}]
+         'url':'http://www.korokithakis.net/tutorials/python/','views': 500}]
     
     django_pages =[
         {'title':'Official Django Tutorial',
-         'url':'https://docs.djangoproject.com/en/2.1/intro/tutorial01/'},
+         'url':'https://docs.djangoproject.com/en/2.1/intro/tutorial01/', 'views': 128},
         {'title':'Django Rocks',
-         'url':'http://www.djangorocks.com/'},
+         'url':'http://www.djangorocks.com/', 'views': 287},
         {'title':'How to Tango with Django',
-         'url':'http://www.tangowithdjango.com/'}] 
+         'url':'http://www.tangowithdjango.com/', 'views': 361}] 
 
 
     other_pages = [
         {'title':'Bottle',
-        'url':'http://bottlepy.org/docs/dev/'},
+        'url':'http://bottlepy.org/docs/dev/','views': 128},
         {'title':'Flask',
-        'url':'http://flask.pocoo.org'}]
+        'url':'http://flask.pocoo.org','views': 198}]
     cats ={'Python':{'pages':python_pages,
                      'views': 128,
                      'likes': 64
@@ -52,6 +52,18 @@ def populate():
     for c in Category.objects.all():
         for p in Page.objects.filter(category=c):  
             print(f'-{c}:{p}')
+    python_cat = add_cat('Python', views=128, likes=64)
+    django_cat = add_cat('Django', views=64, likes=32)
+    other_cat = add_cat('Other Frameworks', views=32, likes=16)        
+    for page in python_pages:
+        add_page(python_cat, page['title'], page['url'], page['views'])    
+    for page in django_pages:
+        add_page(django_cat, page['title'], page['url'], page['views']) 
+    for page in other_pages:
+        add_page(other_cat, page['title'], page['url'], page['views'])  
+    for c in Category.objects.all():
+        for p in Page.objects.filter(category=c):  
+            print(f'- {c.name}: {p.title}')             
 
 def add_page(cat, title,url,views=0):
     p =Page.objects.get_or_create(category=cat,title=title)[0]

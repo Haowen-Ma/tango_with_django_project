@@ -16,11 +16,16 @@
                {% endfor %}
            </ul>
            {% else %}
-           <strong>Nopagescurrently incategory.</strong>
+           <strong>No pages currently in category.</strong>
            {% endif %}
+
+            
         {% else %}   
            The specified category does not exist.
-        {% endif %}   
+        {% endif %} 
+
+
+        <p><a href="{% url 'rango:index' %}">Back</a></p>
         </div>
     </body>
 </html>
