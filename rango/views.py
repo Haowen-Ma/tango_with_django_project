@@ -4,6 +4,11 @@ from django.http import HttpResponse
 from rango.models import Page
 from rango.forms import CategoryForm
 from django.shortcuts import redirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
+from rango.models import Category, Page
+from rango.forms import PageForm
+
 
 def index(request):
     category_list = Category.objects.order_by('-likes')[:5]
@@ -44,3 +49,21 @@ def add_category(request):
         else:
             print(form.errors)
     return render(request, 'rango/add_category.html', {'form': form})    
+
+def add_page(request, category_name_slug):
+    category = Category.objects.filter(slug=category_name_slug).first()
+    
+    if category is None:
+        return redirect('rango:index')
+    form = PageForm()
+    if request.method == 'POST':
+        form = PageForm(request.POST)
+        if form.is_valid():
+            page = form.save(commit=False)
+            page.category = category
+            page.views = 0
+            page.save()
+            return redirect(reverse('rango:show_category', kwargs={'category_name_slug': category_name_slug}))
+
+    return render(request, 'rango/add_page.html', {'form': form, 'category': category})    
+
